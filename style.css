@@ -90,6 +90,8 @@ section.active {
   border-radius: 8px;
 }
 
+
+
 /* TABLEAU SYNTHÈSE */
 .table-container {
   overflow-x: auto;
@@ -135,6 +137,4 @@ section.active {
   text-decoration: underline;
 }
 
-.pdf-link {
-  margin-bottom: 15px;
-}
+
