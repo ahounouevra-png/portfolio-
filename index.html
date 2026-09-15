@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio — AHOUNOU Evrard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #FAF7EF;
+      --card: #FFFFFF;
+      --ink: #2B3A55;
+      --muted: #7C8494;
+      --line: #E1D9C6;
+      --yellow: #F4B400;
+      --yellow-bg: #FFF6DD;
+      --pink: #FF6FA0;
+      --pink-bg: #FFEAF2;
+      --blue: #4CA6E0;
+      --blue-bg: #E9F5FF;
+      --shadow: 5px 5px 0 rgba(43,58,85,0.07);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 1px 1px, rgba(43,58,85,0.08) 1px, transparent 0) 0 0/24px 24px,
+        var(--paper);
+      min-height: 100vh;
+      padding: 36px 20px 110px 64px;
+    }
+
+    a { color: inherit; }
+
+    /* Spiral-binder rings along the left edge — the signature notebook motif */
+    .spine {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 34px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 30px;
+      padding-top: 60px;
+      pointer-events: none;
+    }
+
+    .spine i {
+      display: block;
+      width: 16px; height: 16px;
+      border: 2.5px solid var(--line);
+      border-radius: 50%;
+      border-right-color: transparent;
+      transform: rotate(-40deg);
+    }
+
+    @media (max-width: 640px) { .spine { display: none; } body { padding-left: 18px; } }
+
+    /* ---------- WRAP / LAYOUT ---------- */
+    .wrap { max-width: 720px; margin: 0 auto; }
+
+    .top-id {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .top-id .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--yellow); }
+
+    section { display: none; animation: fadeIn 0.35s ease; }
+    section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ---------- NOTEBOOK CARD — signature element ---------- */
+    .card {
+      position: relative;
+      background: var(--card);
+      border: 2px solid var(--ink);
+      border-radius: 26px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    /* small pin / rivet dot in the top-right corner of every card */
+    .card::after {
+      content: "";
+      position: absolute;
+      top: 18px; right: 20px;
+      width: 10px; height: 10px;
+      border: 2px solid var(--line);
+      border-radius: 50%;
+    }
+
+    /* folded paper corner — used on the "About" card */
+    .card.folded { padding-top: 34px; }
+    .card.folded::before {
+      content: "";
+      position: absolute;
+      top: 0; right: 0;
+      width: 34px; height: 34px;
+      background: var(--paper);
+      border-left: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      border-radius: 0 24px 0 18px;
+    }
+    .card.folded::after { display: none; }
+
+    .dashed-sep { border: none; border-top: 2px dashed var(--line); margin: 20px 0; }
+
+    .section-label { font-size: 11px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+    .section-title { font-family: 'Kalam', cursive; font-weight: 700; font-size: 30px; line-height: 1.15; margin-bottom: 26px; color: var(--ink); }
+
+    /* ---------- IDENTITY CARD ---------- */
+    .profile-head { display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap; }
+
+    .avatar {
+      width: 84px; height: 84px;
+      border-radius: 20px;
+      border: 2.5px solid var(--ink);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .profile-name { font-family: 'Kalam', cursive; font-size: 26px; font-weight: 700; line-height: 1.2; }
+
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 2px solid var(--ink); border-radius: 99px;
+      padding: 3px 13px; font-size: 12px; font-weight: 700; background: #fff;
+    }
+    .chip.fill-yellow { background: var(--yellow-bg); border-color: var(--yellow); color: #8a6400; }
+    .chip.fill-blue { background: var(--blue-bg); border-color: var(--blue); color: #1f5f8a; }
+    .chip.fill-pink { background: var(--pink-bg); border-color: var(--pink); color: #a03a63; }
+
+    .coord-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 14px; }
+    .coord-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; text-decoration: none; }
+    .coord-row:last-child { margin-bottom: 0; }
+    .coord-row .ic {
+      width: 38px; height: 38px; flex-shrink: 0;
+      border: 2px solid var(--ink); border-radius: 11px;
+      display: flex; align-items: center; justify-content: center; font-size: 16px; background: #fff;
+    }
+    .coord-row .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+    .coord-row .val { font-size: 14px; font-weight: 700; color: var(--ink); }
+    .coord-row:hover .val { color: var(--blue); }
+
+    .sticky {
+      background: var(--yellow-bg);
+      border: 2px dashed var(--yellow);
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .sticky .ic { font-size: 20px; }
+    .sticky b { display: block; font-size: 14px; margin-bottom: 3px; color: #6b4d00; }
+    .sticky p { font-size: 13px; color: #8a6a1f; line-height: 1.5; }
+
+    .action-row { display: flex; gap: 12px; justify-content: center; margin-top: 22px; }
+    .action-circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 2px solid var(--ink); background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; text-decoration: none; color: var(--ink);
+      transition: transform 0.15s;
+    }
+    .action-circle:hover { transform: translateY(-2px); background: var(--yellow-bg); }
+
+    /* ---------- ABOUT ---------- */
+    .about-text { font-size: 15px; line-height: 1.85; color: #3d4a63; }
+    .about-text strong { color: var(--ink); }
+
+    .info-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 22px; }
+    .info-pill { flex: 1; min-width: 160px; border: 2px solid var(--ink); border-radius: 14px; padding: 13px 15px; background: #fff; }
+    .info-pill .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 5px; }
+    .info-pill .val { font-size: 13px; color: var(--ink); font-weight: 700; }
+
+    /* ---------- "CE QUE JE FAIS" trio ---------- */
+    .trio { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+    .trio-card { background: #fff; border: 2px solid var(--ink); border-radius: 20px; padding: 20px; position: relative; }
+    .trio-card::after { content: ""; position: absolute; top: 16px; right: 18px; width: 9px; height: 9px; border-radius: 50%; }
+    .trio-card.c-yellow { border-color: var(--yellow); } .trio-card.c-yellow::after { background: var(--yellow); }
+    .trio-card.c-pink { border-color: var(--pink); } .trio-card.c-pink::after { background: var(--pink); }
+    .trio-card.c-blue { border-color: var(--blue); } .trio-card.c-blue::after { background: var(--blue); }
+    .trio-card .spark { font-size: 18px; margin-bottom: 6px; }
+    .trio-card h3 { font-family: 'Kalam', cursive; font-size: 17px; margin-bottom: 8px; color: var(--ink); }
+    .trio-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ---------- COMPÉTENCES (grouped, Elouan-style) ---------- */
+    .skill-group { margin-bottom: 20px; }
+    .skill-group .grp-label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 12px; }
+    .skill-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+    .skill-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      border: 2px solid var(--ink); border-radius: 12px;
+      padding: 8px 14px; font-size: 13px; font-weight: 600; background: #fff;
+    }
+
+    /* ---------- PROJETS PHARES ---------- */
+    .group-title { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; font-family: 'Kalam', cursive; margin: 6px 0 16px; }
+    .group-title::after { content: ''; flex: 1; height: 2px; background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px); }
+
+    .proj-card {
+      background: #fff; border: 2px solid var(--ink); border-radius: 22px; overflow: hidden;
+      box-shadow: var(--shadow); margin-bottom: 20px;
+    }
+    .proj-thumb { width: 100%; height: 170px; background: var(--yellow-bg); border-bottom: 2px solid var(--ink); position: relative; overflow: hidden; }
+    .proj-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .proj-thumb.mock { display: flex; align-items: center; justify-content: center; background: var(--blue-bg); }
+    .mock-window {
+      width: 84%; background: #fff; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden;
+    }
+    .mock-bar { display: flex; gap: 5px; padding: 7px 9px; border-bottom: 2px solid var(--ink); }
+    .mock-bar span { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+    .mock-body { padding: 16px; display: flex; gap: 12px; }
+    .mock-thumb-box { width: 46px; height: 34px; border: 2px dashed var(--ink); border-radius: 6px; flex-shrink: 0; }
+    .mock-lines { flex: 1; display: flex; flex-direction: column; gap: 6px; justify-content: center; }
+    .mock-lines i { display: block; height: 6px; background: var(--line); border-radius: 3px; }
+    .mock-lines i:nth-child(2) { width: 70%; }
+
+    .proj-body { padding: 20px; }
+    .proj-cat {
+      display: inline-block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;
+      color: #1f5f8a; background: var(--blue-bg); border: 1px solid var(--blue); padding: 3px 10px; border-radius: 99px; margin-bottom: 10px;
+    }
+    .proj-title { font-family: 'Kalam', cursive; font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+    .proj-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 10px; }
+    .proj-tags { margin-bottom: 12px; }
+    .proj-tags span { display: inline-block; font-size: 11px; font-weight: 600; color: var(--muted); margin: 2px 8px 2px 0; }
+    .proj-link {
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 2px dashed var(--line); padding-top: 12px;
+      font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: none;
+    }
+    .proj-link:hover { color: var(--blue); }
+
+    /* ---------- SYNTHÈSE TABLE (reused) ---------- */
+    .table-wrapper { overflow-x: auto; border-radius: 20px; border: 2px solid var(--ink); box-shadow: var(--shadow); }
+    .synthese-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px; }
+    .synthese-table th {
+      background: var(--yellow-bg); color: #8a6400; font-family: 'Kalam', cursive; font-size: 12px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em; padding: 14px 16px; text-align: center;
+      border-bottom: 2px solid var(--ink); border-right: 1px solid var(--line);
+    }
+    .synthese-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); vertical-align: top; color: #3d4a63; line-height: 1.6; }
+    .synthese-table tr:last-child td { border-bottom: none; }
+    .synthese-table tr:hover td { background: var(--yellow-bg); }
+    .comp-title { font-weight: 700; color: var(--ink); font-family: 'Kalam', cursive; font-size: 14px; margin-bottom: 6px; }
+    .comp-list { list-style: none; padding: 0; }
+    .comp-list li { font-size: 12px; color: var(--muted); padding: 2px 0; }
+    .comp-list li::before { content: "✎ "; color: var(--pink); }
+    .check-cell { text-align: center; font-size: 16px; }
+    .check-yes { color: var(--pink); font-weight: 700; }
+    .table-link { display: inline-flex; align-items: center; gap: 6px; color: #1f5f8a; text-decoration: none; font-size: 12px; font-weight: 600; padding: 5px 10px; border: 2px solid var(--blue); border-radius: 8px; margin-top: 6px; background: var(--blue-bg); }
+    .period-badge { display: inline-block; background: var(--pink-bg); border: 2px solid var(--pink); color: #a03a63; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+    .pdf-banner { display: flex; align-items: center; gap: 14px; background: var(--yellow-bg); border: 2px dashed var(--yellow); border-radius: 16px; padding: 16px 22px; margin-bottom: 26px; flex-wrap: wrap; }
+    .pdf-banner a { color: #8a6400; text-decoration: none; font-weight: 700; font-size: 14px; }
+    .pdf-banner a:hover { text-decoration: underline; }
+
+    /* ---------- VEILLE / CERTIFICATIONS (reused, grid becomes stack) ---------- */
+    .veille-cards, .cert-grid, .contact-grid { display: flex; flex-direction: column; gap: 16px; }
+    .veille-card, .cert-card, .contact-item {
+      background: #fff; border: 2px solid var(--ink); border-radius: 20px; padding: 22px;
+      box-shadow: var(--shadow); position: relative;
+    }
+    .veille-card::after, .cert-card::after { content: ""; position: absolute; top: 16px; right: 18px; width: 9px; height: 9px; border: 2px solid var(--line); border-radius: 50%; }
+    .veille-card .v-icon { font-size: 26px; margin-bottom: 12px; }
+    .veille-card .v-title { font-family: 'Kalam', cursive; font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .veille-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+    .cert-card { display: flex; gap: 16px; align-items: flex-start; }
+    .cert-icon { width: 46px; height: 46px; border-radius: 12px; background: var(--yellow-bg); border: 2px solid var(--yellow); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .cert-title { font-family: 'Kalam', cursive; font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .cert-org { font-size: 12px; color: var(--muted); margin-bottom: 8px; font-weight: 500; }
+    .cert-link { font-size: 12px; font-weight: 600; color: #1f5f8a; text-decoration: none; }
+    .cert-link:hover { text-decoration: underline; }
+
+    /* ---------- CV ---------- */
+    .cv-section { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; text-align: center; padding: 20px 10px 6px; }
+    .cv-icon { font-size: 56px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px;
+      background: var(--ink); border: 2px solid var(--ink); border-radius: 14px; color: #fff;
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; text-decoration: none;
+    }
+    .btn:hover { box-shadow: 3px 3px 0 var(--yellow); transform: translate(-2px,-2px); }
+
+    /* ---------- CONTACT ---------- */
+    .contact-item { text-decoration: none; color: var(--ink); display: flex; flex-direction: column; gap: 8px; }
+    .contact-icon { font-size: 24px; }
+    .contact-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
+    .contact-val { font-size: 14px; font-weight: 700; color: #1f5f8a; }
+
+    /* ---------- REMERCIEMENTS — quote bubble ---------- */
+    .quote-card { background: #fff; border: 2px solid var(--ink); border-radius: 24px; padding: 34px 30px 28px; position: relative; box-shadow: var(--shadow); }
+    .quote-card::before { content: "\201C"; position: absolute; top: 2px; right: 22px; font-family: Georgia, serif; font-size: 56px; color: var(--yellow); line-height: 1; }
+    .quote-text { font-size: 15px; line-height: 1.9; color: #3d4a63; }
+    .quote-foot { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding-top: 18px; border-top: 2px dashed var(--line); }
+    .quote-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); overflow: hidden; flex-shrink: 0; }
+    .quote-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .quote-name { font-weight: 700; font-size: 13px; }
+    .quote-role { font-size: 11px; color: var(--muted); }
+
+    /* ---------- BOTTOM TAB BAR — primary nav, always visible ---------- */
+    .tabbar {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      background: var(--card); border-top: 2px solid var(--ink);
+      z-index: 100; padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+    }
+    .tabbar-inner { max-width: 720px; margin: 0 auto; display: flex; overflow-x: auto; gap: 2px; scrollbar-width: none; }
+    .tabbar-inner::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      flex: 0 0 auto; background: none; border: none; color: var(--muted);
+      font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 700;
+      padding: 8px 13px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+      cursor: pointer; white-space: nowrap; border-bottom: 3px solid transparent;
+    }
+    .tab-btn .tic { font-size: 18px; }
+    .tab-btn.active { color: var(--ink); border-bottom-color: var(--yellow); }
+
+    .credit { text-align: center; font-size: 12px; color: var(--muted); margin-top: 12px; padding-bottom: 10px; }
+
+    @media (max-width: 640px) {
+      .profile-head { flex-direction: column; align-items: center; text-align: center; }
+      .chips { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="spine"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+<div class="wrap">
+  <!-- ==================== ACCUEIL / BIO ==================== -->
+  <section id="accueil" class="active">
+
+    <div class="card">
+      <div class="profile-head">
+        <div class="avatar"><img src="image/ma_photo.jpg" alt="AHOUNOU Evrard"></div>
+        <div>
+          <div class="profile-name">AHOUNOU Evrard</div>
+          <div class="chips">
+            <span class="chip fill-yellow">BTS SIO</span>
+            <span class="chip fill-blue">SISR</span>
+          </div>
+        </div>
+      </div>
+
+      <hr class="dashed-sep">
+
+      <div class="coord-label">Coordonnées</div>
+      <a href="mailto:ahounouevrard04@gmail.com" class="coord-row">
+        <div class="ic">✉️</div>
+        <div><div class="lbl">Email</div><div class="val">ahounouevrard04@gmail.com</div></div>
+      </a>
+      <a href="tel:0782903097" class="coord-row">
+        <div class="ic">📞</div>
+        <div><div class="lbl">Téléphone</div><div class="val">07 82 90 30 97</div></div>
+      </a>
+      <a href="https://www.linkedin.com/in/evrardd/" target="_blank" class="coord-row">
+        <div class="ic">💼</div>
+        <div><div class="lbl">LinkedIn</div><div class="val">linkedin.com/in/evrardd</div></div>
+      </a>
+
+      <hr class="dashed-sep">
+
+      <div class="sticky">
+        <div class="ic">🎓</div>
+        <div>
+          <b>Portfolio BTS SIO — Session 2025</b>
+          <p>Option SISR (Solutions d'Infrastructure, Systèmes et Réseaux) — MY DIGITALSCHOOL RENNES.</p>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <a href="mailto:ahounouevrard04@gmail.com" class="action-circle" title="Envoyer un email">✉️</a>
+        <a href="dossier/AHOUNOU_EvrardCV.pdf" target="_blank" class="action-circle" title="Voir mon CV">📄</a>
+        <a href="https://www.linkedin.com/in/evrardd/" target="_blank" class="action-circle" title="LinkedIn">🔗</a>
+      </div>
+    </div>
+
+    <div class="card folded">
+      <div class="section-label">Ce que j'aime faire</div>
+      <h2 class="section-title" style="font-size:24px; margin-bottom:16px;">À propos de moi</h2>
+      <p class="about-text">
+        Je m'appelle <strong>Ahounou Evrard</strong>, étudiant en BTS Services Informatiques aux Organisations (option SISR). Je me forme à l'administration des réseaux, à la virtualisation, à la cybersécurité et à la gestion d'infrastructures. J'aime apprendre en pratiquant et je construis progressivement mes compétences à travers des projets concrets.
+        <br><br>
+        Mon objectif est de devenir un professionnel compétent et polyvalent dans le domaine de l'informatique, capable de gérer des systèmes complexes et de contribuer à la transformation numérique des organisations.
+      </p>
+
+      <div class="info-row">
+        <div class="info-pill"><div class="lbl">Formation</div><div class="val">BTS SIO — Option SISR</div></div>
+        <div class="info-pill"><div class="lbl">Centre</div><div class="val">MY DIGITALSCHOOL RENNES</div></div>
+        <div class="info-pill"><div class="lbl">Session</div><div class="val">2025</div></div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin:30px 2px 4px;">Domaines</div>
+    <h2 class="section-title" style="font-size:22px;">Ce que je fais</h2>
+    <div class="trio">
+      <div class="trio-card c-yellow">
+        <div class="spark">🌐</div>
+        <h3>Réseaux & Infrastructure</h3>
+        <p>Administration réseaux, gestion DNS et mise en œuvre d'infrastructures avec Cisco Packet Tracer.</p>
+      </div>
+      <div class="trio-card c-pink">
+        <div class="spark">🔐</div>
+        <h3>Cybersécurité</h3>
+        <p>Sensibilisation aux menaces, bonnes pratiques de sécurité des systèmes et suivi CVE / ANSSI.</p>
+      </div>
+      <div class="trio-card c-blue">
+        <div class="spark">🖥️</div>
+        <h3>Systèmes & Web</h3>
+        <p>Gestion de services informatiques, développement HTML/CSS/JS/PHP et déploiement de sites.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PRÉSENTATION / COMPÉTENCES ==================== -->
+  <section id="presentation">
+    <div class="section-label">Mon profil</div>
+    <h2 class="section-title">Compétences</h2>
+
+    <div class="card">
+      <div class="skill-group">
+        <div class="grp-label">Réseaux & Systèmes</div>
+        <div class="skill-pills">
+          <span class="skill-pill">🌐 Administration réseaux</span>
+          <span class="skill-pill">🖥️ Virtualisation</span>
+          <span class="skill-pill">🐧 Linux</span>
+          <span class="skill-pill">📡 Gestion DNS</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="grp-label">Sécurité</div>
+        <div class="skill-pills">
+          <span class="skill-pill">🔐 Cybersécurité</span>
+          <span class="skill-pill">🛡️ Bonnes pratiques ANSSI / CERT-FR</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="grp-label">Développement Web</div>
+        <div class="skill-pills">
+          <span class="skill-pill">🧡 HTML5</span>
+          <span class="skill-pill">🎨 CSS3</span>
+          <span class="skill-pill">⚡ JavaScript</span>
+          <span class="skill-pill">🐘 PHP</span>
+          <span class="skill-pill">📰 WordPress</span>
+        </div>
+      </div>
+      <div class="skill-group" style="margin-bottom:0;">
+        <div class="grp-label">Outils & Réseaux</div>
+        <div class="skill-pills">
+          <span class="skill-pill">🔀 Cisco Packet Tracer</span>
+          <span class="skill-pill">🏅 Cisco NetAcad</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PROJETS PHARES ==================== -->
+  <section id="projets">
+    <div class="section-label">Réalisations</div>
+    <h2 class="section-title">Projets Phares</h2>
+
+    <div class="group-title">🖥️ Hardware</div>
+
+    <div class="proj-card">
+      <div class="proj-thumb"><img src="image/capture_de_la_pile_bios.png" alt="Pile CMOS"></div>
+      <div class="proj-body">
+        <div class="proj-cat">Hardware</div>
+        <div class="proj-title">Localisation et extraction de la pile CMOS</div>
+        <div class="proj-desc">Repérage et retrait propre de la pile CMOS sur carte mère afin de diagnostiquer un problème de configuration BIOS.</div>
+        <div class="proj-tags"><span>#Diagnostic</span><span>#Maintenance</span></div>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-thumb"><img src="image/projet_bricolage.jpg" alt="Remplacement pile BIOS"></div>
+      <div class="proj-body">
+        <div class="proj-cat">Hardware</div>
+        <div class="proj-title">Remplacement propre de la pile BIOS</div>
+        <div class="proj-desc">Remplacement de la pile CMOS et vérification du bon redémarrage des paramètres BIOS.</div>
+        <div class="proj-tags"><span>#BIOS</span><span>#Réparation</span></div>
+      </div>
+    </div>
+
+    <div class="group-title">💻 Software</div>
+
+    <div class="proj-card">
+      <div class="proj-thumb"><img src="image/projet_portfolio.png" alt="Structure HTML/CSS du portfolio"></div>
+      <div class="proj-body">
+        <div class="proj-cat">Software — Web</div>
+        <div class="proj-title">Structure HTML / CSS du portfolio</div>
+        <div class="proj-desc">Construction de l'ossature HTML et de la mise en forme CSS de ce portfolio.</div>
+        <div class="proj-tags"><span>#HTML</span><span>#CSS</span></div>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-thumb"><img src="image/projet_portfolio1.png" alt="Animations et design visuel"></div>
+      <div class="proj-body">
+        <div class="proj-cat">Software — Design</div>
+        <div class="proj-title">Animations et design visuel</div>
+        <div class="proj-desc">Travail sur les micro-interactions et l'identité visuelle du site.</div>
+        <div class="proj-tags"><span>#UI</span><span>#Animation</span></div>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-thumb"><img src="image/projet_Portfolio2.png" alt="Version finale responsive"></div>
+      <div class="proj-body">
+        <div class="proj-cat">Software — Web</div>
+        <div class="proj-title">Version finale responsive</div>
+        <div class="proj-desc">Adaptation du portfolio à toutes les tailles d'écran (mobile, tablette, desktop).</div>
+        <div class="proj-tags"><span>#Responsive</span><span>#JS</span></div>
+      </div>
+    </div>
+
+    <div class="group-title">🌐 Migration & Déploiement</div>
+
+    <div class="proj-card">
+      <div class="proj-thumb mock">
+        <div class="mock-window">
+          <div class="mock-bar"><span></span><span></span><span></span></div>
+          <div class="mock-body"><div class="mock-thumb-box"></div><div class="mock-lines"><i></i><i></i></div></div>
+        </div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-cat">DevOps — Migration</div>
+        <div class="proj-title">Migration WordPress vers N0C</div>
+        <div class="proj-desc">Évolution du site, paramétrage et migration de la plateforme WordPress vers N0C.</div>
+        <div class="proj-tags"><span>#WordPress</span><span>#Migration</span></div>
+        <a class="proj-link" href="dossier/migration word presse vers noc.pdf" target="_blank">📄 Voir le document <span>↗</span></a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-thumb mock">
+        <div class="mock-window">
+          <div class="mock-bar"><span></span><span></span><span></span></div>
+          <div class="mock-body"><div class="mock-thumb-box"></div><div class="mock-lines"><i></i><i></i></div></div>
+        </div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-cat">Développement — PHP</div>
+        <div class="proj-title">Formulaire d'inscription HTML / CSS / JS / PHP</div>
+        <div class="proj-desc">Conception et déploiement d'un formulaire d'inscription complet.</div>
+        <div class="proj-tags"><span>#PHP</span><span>#Formulaire</span></div>
+        <a class="proj-link" href="https://docs.google.com/presentation/d/1xNradGZsjgydD3C6pSjQ6d8G18KCpHxy/edit?usp=drive_link" target="_blank">🔗 Voir la présentation <span>↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="synthese">
+    <div class="section-label">BTS SIO — Épreuve E5</div>
+    <h2 class="section-title">Tableau de synthèse</h2>
+
+    <div class="pdf-banner">
+      <span>📄</span>
+      <span>Document officiel :</span>
+      <a href="dossier/TABLEAU-DE-SYNTHESE - PDF.pdf" target="_blank">Télécharger le tableau de synthèse (PDF)</a>
+    </div>
+
+    <div style="margin-bottom:16px; font-size:13px; color: var(--muted);">
+      <strong style="color:var(--text)">NOM :</strong> AHOUNOU EVRARD &nbsp;|&nbsp;
+      <strong style="color:var(--text)">Centre :</strong> MY DIGITALSCHOOL RENNES &nbsp;|&nbsp;
+      <strong style="color:var(--text)">Option :</strong> SISR &nbsp;|&nbsp;
+      <strong style="color:var(--text)">Session :</strong> 2025
+    </div>
+
+    <div class="table-wrapper">
+      <table class="synthese-table">
+        <thead>
+          <tr>
+            <th rowspan="2" style="width:260px; text-align:left;">Compétences mises en œuvre</th>
+            <th rowspan="2" style="width:220px; text-align:left;">Réalisation professionnelle</th>
+            <th rowspan="2" style="width:110px;">Période</th>
+            <th colspan="3">Contexte de réalisation</th>
+          </tr>
+          <tr>
+            <th>Formation</th>
+            <th>Stage 1ʳᵉ année</th>
+            <th>Stage 2ᵉ année</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- BLOC 1 — Formation -->
+          <tr>
+            <td colspan="6" style="background: var(--yellow-bg); color: #8a6400; font-family:'Kalam',cursive; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding: 10px 16px;">
+              Réalisations en cours de formation
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="comp-title">Gérer le patrimoine informatique</div>
+              <ul class="comp-list">
+                <li>Recenser et identifier les ressources numériques</li>
+                <li>Exploiter des référentiels, normes et standards</li>
+                <li>Mettre en place et vérifier les niveaux d'habilitation</li>
+                <li>Vérifier la continuité d'un service informatique</li>
+                <li>Gérer des sauvegardes</li>
+                <li>Vérifier le respect des règles d'utilisation</li>
+              </ul>
+            </td>
+            <td>
+              Sauvegarde, restauration, continuité de service<br>
+              <a class="table-link" href="https://docs.google.com/presentation/d/1n3KmoUhphDSzLLjZi4kMOXxwX_ZHBlPJ/edit?usp=drive_link" target="_blank">🔗 Présentation</a>
+            </td>
+            <td><span class="period-badge">20/11/2025</span></td>
+            <td class="check-cell"><span class="check-yes">✔</span></td>
+            <td class="check-cell"></td>
+            <td class="check-cell"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="comp-title">Répondre aux incidents et demandes</div>
+              <ul class="comp-list">
+                <li>Collecter, suivre et orienter des demandes</li>
+                <li>Traiter des demandes réseau et système</li>
+                <li>Traiter des demandes applicatives</li>
+              </ul>
+            </td>
+            <td>Diagnostic et correction des problèmes lors de la migration</td>
+            <td><span class="period-badge">20/11/2025</span></td>
+            <td class="check-cell"><span class="check-yes">✔</span></td>
+            <td class="check-cell"></td>
+            <td class="check-cell"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="comp-title">Développer la présence en ligne</div>
+              <ul class="comp-list">
+                <li>Participer à la valorisation de l'image de l'organisation</li>
+                <li>Référencer les services en ligne et mesurer leur visibilité</li>
+                <li>Participer à l'évolution d'un site Web</li>
+              </ul>
+            </td>
+            <td>
+              Évolution du site, paramétrage<br>
+              Création d'un formulaire d'inscription HTML/CSS/JS/PHP<br>
+              <a class="table-link" href="https://docs.google.com/presentation/d/1xNradGZsjgydD3C6pSjQ6d8G18KCpHxy/edit?usp=drive_link" target="_blank">🔗 Présentation</a>
+            </td>
+            <td><span class="period-badge">20/11/2025<br>– 04/12/2025</span></td>
+            <td class="check-cell"><span class="check-yes">✔</span></td>
+            <td class="check-cell"></td>
+            <td class="check-cell"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="comp-title">Travailler en mode projet</div>
+              <ul class="comp-list">
+                <li>Analyser les objectifs et les modalités d'organisation</li>
+                <li>Planifier les activités</li>
+                <li>Évaluer les indicateurs de suivi et analyser les écarts</li>
+              </ul>
+            </td>
+            <td>Planification des étapes, répartition des rôles</td>
+            <td><span class="period-badge">20/11/2025</span></td>
+            <td class="check-cell"><span class="check-yes">✔</span></td>
+            <td class="check-cell"></td>
+            <td class="check-cell"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="comp-title">Mettre à disposition un service informatique</div>
+              <ul class="comp-list">
+                <li>Réaliser les tests d'intégration et d'acceptation</li>
+                <li>Déployer un service</li>
+                <li>Accompagner les utilisateurs</li>
+              </ul>
+            </td>
+            <td>
+              Déploiement du site, tests, mise en production<br>
+              Formulaire d'inscription (déploiement)<br>
+              <a class="table-link" href="https://docs.google.com/presentation/d/1xNradGZsjgydD3C6pSjQ6d8G18KCpHxy/edit?usp=drive_link" target="_blank">🔗 Présentation</a>
+            </td>
+            <td><span class="period-badge">20/11/2025<br>– 04/12/2025</span></td>
+            <td class="check-cell"><span class="check-yes">✔</span></td>
+            <td class="check-cell"></td>
+            <td class="check-cell"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="comp-title">Organiser son développement professionnel</div>
+              <ul class="comp-list">
+                <li>Mettre en place son environnement d'apprentissage personnel</li>
+                <li>Mettre en œuvre des outils et stratégies de veille</li>
+                <li>Gérer son identité professionnelle</li>
+                <li>Développer son projet professionnel</li>
+              </ul>
+            </td>
+            <td>Création et suivi du portfolio, veille technologique, certifications Cisco</td>
+            <td><span class="period-badge">2025</span></td>
+            <td class="check-cell"><span class="check-yes">✔</span></td>
+            <td class="check-cell"></td>
+            <td class="check-cell"></td>
+          </tr>
+
+          <!-- BLOC 2 — Stage 1re année -->
+          <tr>
+            <td colspan="6" style="background: var(--pink-bg); color: #a03a63; font-family:'Kalam',cursive; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding: 10px 16px;">
+              Réalisations en milieu professionnel — 1ʳᵉ année
+            </td>
+          </tr>
+          <tr>
+            <td colspan="6" style="color: var(--muted); font-size:13px; text-align:center; padding: 20px;">
+              À compléter lors du stage de première année
+            </td>
+          </tr>
+
+          <!-- BLOC 3 — Stage 2e année -->
+          <tr>
+            <td colspan="6" style="background: var(--pink-bg); color: #a03a63; font-family:'Kalam',cursive; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding: 10px 16px;">
+              Réalisations en milieu professionnel — 2ᵉ année
+            </td>
+          </tr>
+          <tr>
+            <td colspan="6" style="color: var(--muted); font-size:13px; text-align:center; padding: 20px;">
+              À compléter lors du stage de deuxième année
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- VEILLE TECHNOLOGIQUE -->
+  <section id="veille">
+    <div class="section-label">Intelligence informatique</div>
+    <h2 class="section-title">Veille technologique</h2>
+
+    <div class="veille-cards">
+      <div class="veille-card">
+        <div class="v-icon">🔐</div>
+        <div class="v-title">Cybersécurité</div>
+        <p>Suivi des nouvelles menaces, vulnérabilités CVE, et bonnes pratiques en sécurité des systèmes et réseaux. Sources : ANSSI, CERT-FR.</p>
+      </div>
+      <div class="veille-card">
+        <div class="v-icon">☁️</div>
+        <div class="v-title">Cloud & Infrastructure</div>
+        <p>Veille sur les évolutions cloud (AWS, Azure, OVH), la virtualisation (VMware, Proxmox) et les architectures modernes.</p>
+      </div>
+      <div class="veille-card">
+        <div class="v-icon">🌐</div>
+        <div class="v-title">Réseaux & Protocoles</div>
+        <p>Actualités sur les standards réseaux, protocoles (IPv6, BGP, SD-WAN) et les certifications Cisco NetAcad.</p>
+      </div>
+      <div class="veille-card">
+        <div class="v-icon">💡</div>
+        <div class="v-title">Outils & Méthodologies</div>
+        <p>Suivi des nouvelles pratiques DevOps, de l'automatisation (Ansible, scripts Bash) et des outils de monitoring.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certifications">
+    <div class="section-label">Badges & diplômes</div>
+    <h2 class="section-title">Certifications</h2>
+
+    <div class="cert-grid">
+      <div class="cert-card">
+        <div class="cert-icon">🖥️</div>
+        <div>
+          <div class="cert-title">IT Hardware Essentials — Niveau 1</div>
+          <div class="cert-org">Cisco NetAcad · 2025</div>
+          <a class="cert-link" href="https://www.credly.com/badges/4b847b41-3d5a-4a56-bbfe-180bc1c4fec2/public_url" target="_blank">🔗 Voir le badge Credly</a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-icon">🌐</div>
+        <div>
+          <div class="cert-title">Networking Basics — Niveau 1</div>
+          <div class="cert-org">Cisco NetAcad · 2026</div>
+          <a class="cert-link" href="https://www.credly.com/badges/078ef6f2-1343-4c2d-901f-511a7dd6d7bf/public_url" target="_blank">🔗 Voir le badge Credly</a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-icon">🔐</div>
+        <div>
+          <div class="cert-title">Cybersecurity Essentials — Niveau 1</div>
+          <div class="cert-org">Cisco NetAcad · 2025</div>
+          <a class="cert-link" href="https://www.credly.com/badges/0e9faeaa-5ce7-45be-84c4-8d9eedbcecc7/public_url" target="_blank">🔗 Voir le badge Credly</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CV -->
+  <section id="cv">
+    <div class="section-label">Mon parcours</div>
+    <h2 class="section-title">Curriculum Vitae</h2>
+
+    <div class="card cv-section">
+      <div class="cv-icon">📄</div>
+      <p style="color:var(--muted); font-size:16px; max-width:400px; text-align:center;">
+        Retrouvez l'intégralité de mon parcours, mes expériences et mes compétences dans mon CV.
+      </p>
+      <a href="dossier/AHOUNOU_EvrardCV.pdf" target="_blank" class="btn" style="font-size:16px; padding:16px 36px;">
+        📄 Télécharger mon CV (PDF)
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-label">Restons en lien</div>
+    <h2 class="section-title">Contact</h2>
+
+    <div class="contact-grid">
+      <a href="mailto:ahounouevrard04@gmail.com" class="contact-item">
+        <div class="contact-icon">✉️</div>
+        <div class="contact-label">Email</div>
+        <div class="contact-val">ahounouevrard04@gmail.com</div>
+      </a>
+      <a href="tel:0782903097" class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div class="contact-label">Téléphone</div>
+        <div class="contact-val">07 82 90 30 97</div>
+      </a>
+      <a href="https://www.linkedin.com/in/evrardd/" target="_blank" class="contact-item">
+        <div class="contact-icon">💼</div>
+        <div class="contact-label">LinkedIn</div>
+        <div class="contact-val">linkedin.com/in/evrardd</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- REMERCIEMENTS -->
+  <section id="remerciement">
+    <div class="section-label">Gratitude</div>
+    <h2 class="section-title">Remerciements</h2>
+
+    <div class="quote-card">
+      <p class="quote-text">
+        Je tiens à exprimer ma profonde gratitude à toutes les personnes qui ont contribué à la réalisation de ce portfolio.
+        <br><br>
+        Un merci tout particulier à mes <strong>enseignants et mentors</strong> pour leur soutien et leurs conseils précieux tout au long de mon parcours en BTS SIO option SISR. Leur expertise et leur encouragement m'ont permis de développer mes compétences et de mener à bien mes projets.
+        <br><br>
+        Je remercie également mes <strong>camarades de classe</strong> pour leur collaboration et leur esprit d'équipe, qui ont enrichi cette expérience d'apprentissage.
+        <br><br>
+        Enfin, je suis reconnaissant envers <strong>ma famille et mes amis</strong> pour leur soutien inconditionnel.
+        <br><br>
+        Ce portfolio est le reflet de l'effort collectif. <strong style="color:var(--pink)">Merci ✨</strong>
+      </p>
+      <div class="quote-foot">
+        <div class="quote-avatar"><img src="image/ma_photo.jpg" alt="Evrard"></div>
+        <div>
+          <div class="quote-name">Ahounou Evrard</div>
+          <div class="quote-role">Auteur du portfolio</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="credit">© 2025 AHOUNOU Evrard · Portfolio BTS SIO — Option SISR</div>
+</div>
+
+<!-- BOTTOM TAB BAR — navigation principale -->
+<nav class="tabbar">
+  <div class="tabbar-inner">
+    <button class="tab-btn active" data-section="accueil"><span class="tic">📘</span>Bio</button>
+    <button class="tab-btn" data-section="presentation"><span class="tic">🧩</span>Compétences</button>
+    <button class="tab-btn" data-section="projets"><span class="tic">💼</span>Projets</button>
+    <button class="tab-btn" data-section="synthese"><span class="tic">📊</span>Synthèse</button>
+    <button class="tab-btn" data-section="veille"><span class="tic">🔍</span>Veille</button>
+    <button class="tab-btn" data-section="certifications"><span class="tic">🏅</span>Certifs</button>
+    <button class="tab-btn" data-section="cv"><span class="tic">📄</span>CV</button>
+    <button class="tab-btn" data-section="contact"><span class="tic">✉️</span>Contact</button>
+    <button class="tab-btn" data-section="remerciement"><span class="tic">✨</span>Merci</button>
+  </div>
+</nav>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const sec = document.getElementById(id);
+    if (sec) sec.classList.add('active');
+    document.querySelectorAll(`.tab-btn[data-section="${id}"]`).forEach(b => b.classList.add('active'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => showSection(btn.dataset.section));
+  });
+</script>
+
+</body>
+</html>
